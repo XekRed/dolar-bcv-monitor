@@ -558,6 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 //  SPEECH BUBBLE — simple absolute positioning, no emojis
 // ============================================================
+/*
 (function initSpeechBubble() {
     var MESSAGES = [
         'Hola!',
@@ -633,5 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 })();
+*/
 
 
