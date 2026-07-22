@@ -482,4 +482,67 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Speech Bubble ---
+    /**
+     * Shows random messages in a game-style speech bubble near the cube icon.
+     * Appears periodically with a typewriter effect.
+     */
+    const cubeMessages = [
+        '¡Hola! 👋',
+        'Tip: revisa el historial 📈',
+        'Dólar hoy... 👀',
+        '¡Hecho con ❤️ por XekRed!',
+        'Actualizo cada 5 minutos ⏱️',
+        '¿El dólar subió? 🤔',
+        'GD > todo lo demás 🌟',
+        'Datos del BCV oficial ✅',
+        '¡Convierte monedas abajo! 🔄',
+        'Crash... o sigue? 📉📈',
+    ];
+
+    const bubble = $('speechBubble');
+    const speechText = $('speechText');
+
+    /**
+     * Shows a message in the speech bubble with a typewriter effect.
+     * @param {string} msg - The message to display.
+     */
+    function showBubble(msg) {
+        if (!bubble || !speechText) return;
+        speechText.textContent = '';
+        bubble.classList.add('show');
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < msg.length) {
+                speechText.textContent += msg.charAt(i);
+                i++;
+            } else {
+                clearInterval(interval);
+                // Hide bubble after 3.5 seconds
+                setTimeout(() => bubble.classList.remove('show'), 3500);
+            }
+        }, 45);
+    }
+
+    /**
+     * Picks a random message and shows the bubble.
+     * Schedules the next bubble appearance randomly between 8 and 18 seconds.
+     */
+    function scheduleNextBubble() {
+        const delay = Math.random() * 10000 + 8000; // 8–18 seconds
+        setTimeout(() => {
+            const msg = cubeMessages[Math.floor(Math.random() * cubeMessages.length)];
+            showBubble(msg);
+            scheduleNextBubble();
+        }, delay);
+    }
+
+    // Show first bubble after 3 seconds so the user notices it quickly
+    setTimeout(() => {
+        showBubble('¡Bienvenido al Monitor! 🎮');
+        scheduleNextBubble();
+    }, 3000);
 });
+
