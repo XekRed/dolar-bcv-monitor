@@ -214,11 +214,11 @@ body {
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 
-.card-change { text-align: center; }
+.card-change { text-align: left; }
 .card-change.up { border-color: rgba(255,46,95,0.2); }
 .card-change.down { border-color: rgba(0,229,160,0.2); }
 .card-change.neutral { border-color: rgba(255,159,67,0.2); }
-.change-display { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 2px; }
+.change-display { display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin-bottom: 2px; }
 .change-arrow { font-size: 1.4rem; }
 .card-change.up .change-arrow { color: var(--red); transform: rotate(-90deg); }
 .card-change.down .change-arrow { color: var(--green); transform: rotate(90deg); }
