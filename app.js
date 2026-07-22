@@ -418,4 +418,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSearch();
     fetchAllData();
     setInterval(fetchAllData, 5*60*1000);
+
+    // Easter Egg
+    const eggIcon = $('easterEggIcon');
+    if (eggIcon) {
+        let eggClicks = 0;
+        let eggTimer;
+        eggIcon.addEventListener('click', () => {
+            eggClicks++;
+            clearTimeout(eggTimer);
+            eggTimer = setTimeout(() => eggClicks = 0, 1000);
+            if (eggClicks === 3) {
+                new Audio('efecto.mp3').play().catch(e => console.warn('Audio play failed:', e));
+                eggClicks = 0;
+            }
+        });
+    }
 });

@@ -132,24 +132,26 @@
                                     <label>Monto</label>
                                     <input type="number" id="convAmount" value="1" min="0" step="any">
                                 </div>
-                                <div class="conv-field">
-                                    <label>De</label>
-                                    <select id="convFrom">
-                                        <option value="VES" selected>🇻🇪 Bolívares</option>
-                                        <option value="USD">🇺🇸 Dólar</option>
-                                        <option value="EUR">🇪🇺 Euro</option>
-                                        <option value="USDT">₮ USDT</option>
-                                    </select>
-                                </div>
-                                <button class="swap-btn" id="swapBtn" title="Intercambiar">⇅</button>
-                                <div class="conv-field">
-                                    <label>A</label>
-                                    <select id="convTo">
-                                        <option value="USD" selected>🇺🇸 Dólar</option>
-                                        <option value="EUR">🇪🇺 Euro</option>
-                                        <option value="USDT">₮ USDT</option>
-                                        <option value="VES">🇻🇪 Bolívares</option>
-                                    </select>
+                                <div class="conv-currencies">
+                                    <div class="conv-field">
+                                        <label>De</label>
+                                        <select id="convFrom">
+                                            <option value="VES" selected>🇻🇪 Bs.</option>
+                                            <option value="USD">🇺🇸 USD</option>
+                                            <option value="EUR">🇪🇺 EUR</option>
+                                            <option value="USDT">₮ USDT</option>
+                                        </select>
+                                    </div>
+                                    <button class="swap-btn" id="swapBtn" title="Intercambiar">⇅</button>
+                                    <div class="conv-field">
+                                        <label>A</label>
+                                        <select id="convTo">
+                                            <option value="USD" selected>🇺🇸 USD</option>
+                                            <option value="EUR">🇪🇺 EUR</option>
+                                            <option value="USDT">₮ USDT</option>
+                                            <option value="VES">🇻🇪 Bs.</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="conv-result-box">
@@ -234,6 +236,7 @@
                         <div class="card-header">
                             <span class="card-label">📈 HISTORIAL</span>
                             <div class="history-controls">
+                                <button class="h-btn" data-range="7">7D</button>
                                 <button class="h-btn active" data-range="30">30D</button>
                                 <button class="h-btn" data-range="90">3M</button>
                                 <button class="h-btn" data-range="180">6M</button>
@@ -272,7 +275,7 @@
 
         <footer class="app-footer">
             <p>Datos: <a href="https://dolarvzla.com" target="_blank">DolarVZLA</a> · <a href="https://ve.dolarapi.com" target="_blank">DolarAPI</a> · Solo referencia</p>
-            <p class="footer-brand"><img src="icon.png" alt="" class="footer-icon"> XekRed Monitor</p>
+            <p class="footer-brand"><img src="icon.png" alt="" class="footer-icon" id="easterEggIcon"> XekRed Monitor</p>
         </footer>
     </div>
     <script src="app.js"></script>

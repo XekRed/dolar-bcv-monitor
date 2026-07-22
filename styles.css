@@ -232,8 +232,9 @@ body {
 /* --- Calc Section --- */
 .calc-section { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-bottom: 14px; }
 
-.conv-row { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
-.conv-field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 100px; }
+.conv-row { display: flex; flex-direction: column; gap: 12px; }
+.conv-field { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.conv-currencies { display: flex; align-items: flex-end; gap: 8px; width: 100%; }
 .conv-field label { font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; }
 .conv-field input, .conv-field select {
     width: 100%; padding: 9px 10px;
@@ -255,6 +256,7 @@ body {
     background: var(--cyan-subtle); border: 1px solid var(--cyan-dark);
     border-radius: 50%; color: var(--cyan); font-size: 1rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+    margin-bottom: 2px;
 }
 .swap-btn:hover { background: rgba(0,240,255,0.15); transform: rotate(180deg); }
 
@@ -396,14 +398,6 @@ body {
     .cards-row .card-change { grid-column: span 2; }
 
     .calc-section { grid-template-columns: 1fr; }
-    .conv-row {
-        display: grid;
-        grid-template-columns: 1fr 40px 1fr;
-        gap: 8px;
-        align-items: end;
-    }
-    .conv-row > .conv-field:first-child { grid-column: 1 / -1; }
-    .swap-btn { justify-self: center; margin-bottom: 2px; align-self: center; }
 
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .history-stats { grid-template-columns: repeat(2, 1fr); }
