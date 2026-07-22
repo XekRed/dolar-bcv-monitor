@@ -48,12 +48,12 @@ function setStyle(id, prop, val) {
 function createParticles() {
     const c = $('particles');
     if (!c) return;
-    const cols = ['rgba(0,240,255,0.3)','rgba(0,191,165,0.2)','rgba(88,101,242,0.18)','rgba(0,229,160,0.18)'];
-    for (let i = 0; i < 25; i++) {
+    const cols = ['rgba(0,240,255,0.6)','rgba(0,191,165,0.5)','rgba(88,101,242,0.5)','rgba(0,229,160,0.5)'];
+    for (let i = 0; i < 100; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
-        const s = Math.random()*3+1, col = cols[Math.floor(Math.random()*cols.length)];
-        p.style.cssText = `width:${s}px;height:${s}px;background:${col};box-shadow:0 0 ${s*3}px ${col};left:${Math.random()*100}%;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*15}s;`;
+        const s = Math.random()*4+2, col = cols[Math.floor(Math.random()*cols.length)];
+        p.style.cssText = `width:${s}px;height:${s}px;background:${col};box-shadow:0 0 ${s*4}px ${col};left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*15}s;`;
         c.appendChild(p);
     }
 }
