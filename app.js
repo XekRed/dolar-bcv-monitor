@@ -11,18 +11,34 @@ let rates = { usdBcv:0, usdBcvPrev:0, eurBcv:0, eurBcvPrev:0, usdt:0, usdChangeP
 let historyData = [];
 let compChart = null, gaugeChart = null, histChart = null;
 
+// --- Utilities ---
+/**
+ * Shorthand for document.getElementById with a warning if not found.
+ * @param {string} id - The DOM element ID.
+ * @returns {HTMLElement|null}
+ */
 function $(id) {
     const el = document.getElementById(id);
     if (!el) console.warn('Element not found:', id);
     return el;
 }
 
-// Safe textContent setter
+/**
+ * Safely sets the textContent of an element if it exists.
+ * @param {string} id - The DOM element ID.
+ * @param {string} text - The text to inject.
+ */
 function setText(id, text) {
     const el = $(id);
     if (el) el.textContent = text;
 }
 
+/**
+ * Safely sets a CSS inline style property of an element.
+ * @param {string} id - The DOM element ID.
+ * @param {string} prop - The CSS property name (e.g., 'color', 'display').
+ * @param {string} val - The value to apply.
+ */
 function setStyle(id, prop, val) {
     const el = $(id);
     if (el) el.style[prop] = val;
@@ -43,13 +59,33 @@ function createParticles() {
 }
 
 // --- Helpers ---
+/**
+ * Formats an ISO date string into a localized Venezuelan format.
+ * @param {string} s - ISO date string.
+ * @returns {string} Formatted date (e.g., "lun, 22 jul 2026").
+ */
 function fmtDate(s) {
     try {
         const d = new Date(s + (s.includes('T') ? '' : 'T12:00:00'));
         return d.toLocaleDateString('es-VE', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
     } catch { return s; }
 }
+
+/**
+ * Formats a number to a specific number of decimal places using es-VE locale.
+ * @param {number} n - The number to format.
+ * @param {number} [d=4] - Number of decimal places.
+ * @returns {string} Formatted string.
+ */
 function fmtN(n, d=4) { return Number(n).toLocaleString('es-VE', { minimumFractionDigits:d, maximumFractionDigits:d }); }
+
+/**
+ * Animates a numeric counter counting up to the target value.
+ * @param {string} id - The element ID to animate.
+ * @param {number} target - The final numeric value.
+ * @param {number} [dec=4] - Decimal places to display.
+ * @param {number} [dur=1000] - Duration in milliseconds.
+ */
 function animN(id, target, dec=4, dur=1000) {
     const el = $(id);
     if (!el) return;
@@ -98,6 +134,11 @@ function showData() {
 }
 
 // --- Update Status ---
+/**
+ * Checks if the API date matches today's date or if it's the weekend.
+ * Updates the UI status badge accordingly.
+ * @param {string} currentDate - The date string from the BCV API.
+ */
 function checkUpdateStatus(currentDate) {
     const us = $('updateStatus');
     if (!us) return;
@@ -118,8 +159,12 @@ function checkUpdateStatus(currentDate) {
 }
 
 // --- Fetch ---
-async function fetchAllData() {
-    showLoading();
+/**
+ * Fetches all necessary data from the APIs and triggers rendering.
+ * @param {boolean} [isSilent=false] - If true, skips the loading overlay so it doesn't interrupt the user during auto-refreshes.
+ */
+async function fetchAllData(isSilent = false) {
+    if (!isSilent) showLoading();
     try {
         // Fetch BCV data (primary)
         let bcv;
@@ -412,12 +457,15 @@ function setupConverter() {
 }
 
 // --- Init ---
+/**
+ * Bootstraps the application on DOMContentLoaded.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     createParticles();
     setupHistoryButtons();
     setupSearch();
-    fetchAllData();
-    setInterval(fetchAllData, 5*60*1000);
+    fetchAllData(); // Initial load (with loading screen)
+    setInterval(() => fetchAllData(true), 5*60*1000); // Auto-refresh silently every 5 mins
 
     // Easter Egg
     const eggIcon = $('easterEggIcon');
