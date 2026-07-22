@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitor del Dólar BCV Venezuela - Seguimiento en tiempo real del tipo de cambio oficial, paralelo y USDT con calculadora y gráficas históricas.">
+    <title>💎 Dólar BCV Monitor | XekRed</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="particles"></div>
+    <!-- Glitch scanlines overlay -->
+    <div class="scanlines"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-glow"></div>
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="icon.png" alt="XekRed Icon" class="app-icon" id="appIcon">
+                    <div class="title-block">
+                        <h1 class="glitch-text" data-text="DÓLAR BCV MONITOR">DÓLAR BCV MONITOR</h1>
+                        <span class="subtitle">SEGUIMIENTO EN TIEMPO REAL</span>
+                    </div>
+                </div>
+                <div class="live-badge" id="liveBadge">
+                    <span class="pulse-dot"></span>
+                    <span>CARGANDO...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Loading state -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loader-container">
+                    <img src="icon.png" alt="Loading" class="loader-icon">
+                    <div class="loader-bar"><div class="loader-fill"></div></div>
+                    <p class="loader-text">Consultando tasas...</p>
+                </div>
+            </div>
+
+            <!-- Error state -->
+            <div class="error-panel" id="errorPanel" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <h3>Error de conexión</h3>
+                <p id="errorMessage">No se pudo obtener la tasa del BCV</p>
+                <button class="btn-retry" onclick="fetchAllData()">Reintentar</button>
+            </div>
+
+            <!-- Data content -->
+            <div class="data-content" id="dataContent" style="display: none;">
+
+                <!-- ===== PRICE CARDS ===== -->
+                <section class="cards-row" id="priceCards">
+                    <!-- USD BCV Card -->
+                    <div class="card card-main">
+                        <div class="card-glow"></div>
+                        <div class="card-header">
+                            <span class="card-label">💵 USD BCV (OFICIAL)</span>
+                            <span class="card-date" id="currentDate">--</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="currency-symbol">Bs.</span>
+                            <span class="price-value" id="currentPrice">0.00</span>
+                        </div>
+                        <div class="price-sub">por 1 USD</div>
+                    </div>
+
+                    <!-- Previous Day Card -->
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <span class="card-label">📅 USD AYER</span>
+                            <span class="card-date" id="previousDate">--</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="currency-symbol">Bs.</span>
+                            <span class="price-value" id="previousPrice">0.00</span>
+                        </div>
+                        <div class="price-sub">por 1 USD</div>
+                    </div>
+
+                    <!-- Change Card -->
+                    <div class="card card-change" id="changeCard">
+                        <div class="card-header">
+                            <span class="card-label">📊 VARIACIÓN</span>
+                            <span class="card-badge" id="changeBadge">--</span>
+                        </div>
+                        <div class="change-display">
+                            <span class="change-arrow" id="changeArrow">→</span>
+                            <span class="change-value" id="changePercent">0.00%</span>
+                        </div>
+                        <div class="change-absolute">
+                            <span id="changeAbsolute">Bs. 0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Paralelo Card -->
+                    <div class="card card-paralelo">
+                        <div class="card-header">
+                            <span class="card-label">💱 DÓLAR PARALELO</span>
+                            <span class="card-date" id="paraleloDate">--</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="currency-symbol">Bs.</span>
+                            <span class="price-value" id="paraleloPrice">0.00</span>
+                        </div>
+                        <div class="price-sub">por 1 USD (paralelo)</div>
+                    </div>
+
+                    <!-- EUR BCV Card -->
+                    <div class="card card-euro">
+                        <div class="card-header">
+                            <span class="card-label">🇪🇺 EURO BCV</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="currency-symbol">Bs.</span>
+                            <span class="price-value" id="euroPrice">0.00</span>
+                        </div>
+                        <div class="euro-change">
+                            <span id="euroChangePercent">0.00%</span>
+                        </div>
+                    </div>
+
+                    <!-- USDT Card -->
+                    <div class="card card-usdt">
+                        <div class="card-glow card-glow-cyan"></div>
+                        <div class="card-header">
+                            <span class="card-label">₮ USDT (BINANCE P2P)</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="currency-symbol">Bs.</span>
+                            <span class="price-value" id="usdtPrice">--</span>
+                        </div>
+                        <div class="price-sub" id="usdtSub">Tether P2P</div>
+                    </div>
+                </section>
+
+                <!-- ===== CALCULATOR + LOSS CALCULATOR ===== -->
+                <section class="calc-section">
+                    <!-- Currency Calculator -->
+                    <div class="card card-converter">
+                        <div class="card-glow card-glow-cyan"></div>
+                        <div class="card-header">
+                            <span class="card-label">🔄 CALCULADORA DE DIVISAS</span>
+                        </div>
+                        <div class="converter-body">
+                            <div class="converter-input-group">
+                                <label for="convAmount">Monto</label>
+                                <input type="number" id="convAmount" value="1" min="0" step="any" placeholder="Escribe un monto...">
+                            </div>
+                            <div class="converter-input-group">
+                                <label for="convFrom">De</label>
+                                <select id="convFrom">
+                                    <option value="USD">🇺🇸 Dólar (USD)</option>
+                                    <option value="EUR">🇪🇺 Euro (EUR)</option>
+                                    <option value="USDT">₮ USDT</option>
+                                    <option value="VES" selected>🇻🇪 Bolívares (VES)</option>
+                                </select>
+                            </div>
+                            <button class="swap-btn" id="swapBtn" title="Intercambiar">⇅</button>
+                            <div class="converter-input-group">
+                                <label for="convTo">A</label>
+                                <select id="convTo">
+                                    <option value="USD" selected>🇺🇸 Dólar (USD)</option>
+                                    <option value="EUR">🇪🇺 Euro (EUR)</option>
+                                    <option value="USDT">₮ USDT</option>
+                                    <option value="VES">🇻🇪 Bolívares (VES)</option>
+                                </select>
+                            </div>
+                            <div class="converter-result">
+                                <span class="conv-result-label">Resultado</span>
+                                <span class="conv-result-value" id="convResult">--</span>
+                                <span class="conv-result-rate" id="convRate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dollar Loss Calculator -->
+                    <div class="card card-calculator">
+                        <div class="card-glow card-glow-red"></div>
+                        <div class="card-header">
+                            <span class="card-label">💀 CALCULADORA DE PÉRDIDA</span>
+                        </div>
+                        <div class="calc-content">
+                            <div class="calc-question">
+                                ¿Cuántos dólares necesitas para haber <strong>perdido 1 dólar</strong> en bolívares con el aumento?
+                            </div>
+                            <div class="calc-result" id="calcResult">
+                                <div class="calc-number" id="dollarsNeeded">--</div>
+                                <div class="calc-unit">USD</div>
+                            </div>
+                            <div class="calc-explanation" id="calcExplanation"></div>
+                            <div class="calc-no-change" id="calcNoChange" style="display: none;">
+                                <span class="emoji-large">😎</span>
+                                <p>No hubo cambio hoy. ¡Tus bolívares están a salvo... por ahora!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== CHARTS ===== -->
+                <section class="charts-section">
+                    <!-- Comparison Chart -->
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <span class="card-label">📊 COMPARACIÓN HOY vs AYER</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gauge -->
+                    <div class="card card-gauge">
+                        <div class="card-header">
+                            <span class="card-label">🔥 INDICADOR DE VARIACIÓN</span>
+                        </div>
+                        <div class="gauge-container">
+                            <canvas id="gaugeChart"></canvas>
+                        </div>
+                        <div class="gauge-labels">
+                            <span class="gauge-label-left">BAJÓ</span>
+                            <span class="gauge-label-center" id="gaugeValue">0%</span>
+                            <span class="gauge-label-right">SUBIÓ</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== HISTORY ===== -->
+                <section class="history-section">
+                    <div class="card card-history">
+                        <div class="card-header">
+                            <span class="card-label">📈 HISTORIAL DEL DÓLAR BCV</span>
+                            <div class="history-controls">
+                                <button class="history-btn active" data-range="30">30D</button>
+                                <button class="history-btn" data-range="90">3M</button>
+                                <button class="history-btn" data-range="180">6M</button>
+                                <button class="history-btn" data-range="365">1A</button>
+                                <button class="history-btn" data-range="all">TODO</button>
+                            </div>
+                        </div>
+                        <div class="chart-container chart-container-lg">
+                            <canvas id="historyChart"></canvas>
+                        </div>
+                        <div class="history-stats" id="historyStats">
+                            <div class="hist-stat">
+                                <span class="hist-stat-label">Mínimo</span>
+                                <span class="hist-stat-value" id="histMin">--</span>
+                            </div>
+                            <div class="hist-stat">
+                                <span class="hist-stat-label">Máximo</span>
+                                <span class="hist-stat-value" id="histMax">--</span>
+                            </div>
+                            <div class="hist-stat">
+                                <span class="hist-stat-label">Promedio</span>
+                                <span class="hist-stat-value" id="histAvg">--</span>
+                            </div>
+                            <div class="hist-stat">
+                                <span class="hist-stat-label">Cambio total</span>
+                                <span class="hist-stat-value" id="histChange">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== QUICK STATS ===== -->
+                <section class="stats-section">
+                    <div class="card card-stats">
+                        <div class="card-header">
+                            <span class="card-label">⚡ DATOS RÁPIDOS</span>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Diferencia Bs.</span>
+                                <span class="stat-value" id="statDiff">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Bs. por centavo USD</span>
+                                <span class="stat-value" id="statCentavo">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Salario mín. en USD</span>
+                                <span class="stat-value" id="statSalario">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Tendencia</span>
+                                <span class="stat-value" id="statTendencia">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Brecha Oficial/Paralelo</span>
+                                <span class="stat-value" id="statBrecha">--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Última actualización</span>
+                                <span class="stat-value" id="statUpdate">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Datos: <a href="https://dolarvzla.com" target="_blank" rel="noopener">DolarVZLA</a> · <a href="https://ve.dolarapi.com" target="_blank" rel="noopener">DolarAPI</a> · No oficial · Solo referencia</p>
+            <p class="footer-brand">
+                <img src="icon.png" alt="" class="footer-icon"> XekRed Monitor
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
