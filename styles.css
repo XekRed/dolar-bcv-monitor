@@ -396,8 +396,14 @@ body {
     .cards-row .card-change { grid-column: span 2; }
 
     .calc-section { grid-template-columns: 1fr; }
-    .conv-row { flex-direction: column; }
-    .swap-btn { align-self: center; }
+    .conv-row {
+        display: grid;
+        grid-template-columns: 1fr 40px 1fr;
+        gap: 8px;
+        align-items: end;
+    }
+    .conv-row > .conv-field:first-child { grid-column: 1 / -1; }
+    .swap-btn { justify-self: center; margin-bottom: 2px; align-self: center; }
 
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .history-stats { grid-template-columns: repeat(2, 1fr); }
