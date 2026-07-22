@@ -77,19 +77,20 @@ body {
 .app-container { position: relative; z-index: 2; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
 /* --- Header --- */
-.app-header { position: relative; padding: 16px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.app-header { position: relative; padding: 28px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
 .header-glow {
     position: absolute; top: -60%; left: 50%; transform: translateX(-50%);
     width: 500px; height: 200px;
     background: radial-gradient(ellipse, rgba(0,240,255,0.1) 0%, transparent 70%);
     pointer-events: none; z-index: -1;
 }
-.header-content { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.header-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .header-badges { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .logo-section { display: flex; align-items: center; gap: 12px; }
 
 /* Icon + Speech Bubble */
-.icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
 .speech-bubble {
     position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) scale(0);
     background: var(--bg-elevated); border: 1px solid var(--cyan);

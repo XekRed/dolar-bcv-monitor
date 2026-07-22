@@ -544,5 +544,14 @@ document.addEventListener('DOMContentLoaded', () => {
         showBubble('¡Bienvenido al Monitor! 🎮');
         scheduleNextBubble();
     }, 3000);
+
+    // Click cube to show bubble instantly
+    const cubeIcon = $('cubeIcon');
+    if (cubeIcon) {
+        cubeIcon.addEventListener('click', () => {
+            const msg = cubeMessages[Math.floor(Math.random() * cubeMessages.length)];
+            showBubble(msg);
+        });
+    }
 });
 
