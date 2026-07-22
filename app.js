@@ -556,19 +556,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-//  SPEECH BUBBLE — fixed position, anchored to cube icon via JS
+//  SPEECH BUBBLE — simple absolute positioning, no emojis
 // ============================================================
 (function initSpeechBubble() {
-    // Clear, sensible messages only — no garbled emoji issues
-    const MESSAGES = [
-        '¡Hola! 👋',
-        '¡Hecho por XekRed! 🎮',
-        'Datos actualizados del BCV ✅',
-        '¿El dólar subió hoy? 👀',
-        '¡Revisa el historial! 📈',
-        'Actualizo cada 5 minutos ⏱️',
-        'GD es el mejor juego 🌟',
-        '¿Convierte monedas abajo? 🔄',
+    var MESSAGES = [
+        'Hola!',
+        'Hecho por XekRed',
+        'Datos del BCV oficial',
+        'El dolar subio hoy?',
+        'Revisa el historial!',
+        'Actualizo cada 5 min',
+        'GD es el mejor juego',
+        'Convierte monedas abajo',
     ];
 
     function ready(fn) {
@@ -577,27 +576,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     ready(function () {
-        const bubble  = document.getElementById('speechBubble');
-        const textEl  = document.getElementById('speechText');
-        const iconEl  = document.getElementById('cubeIcon');
+        var bubble = document.getElementById('speechBubble');
+        var textEl = document.getElementById('speechText');
+        var iconEl = document.getElementById('cubeIcon');
 
-        if (!bubble || !textEl || !iconEl) {
-            console.warn('[Bubble] Missing elements');
-            return;
-        }
+        if (!bubble || !textEl || !iconEl) return;
 
-        let hideTimer = null;
-        let typeTimer = null;
-        let isTalking = false;
-
-        /** Position bubble to the LEFT of the icon using fixed coordinates */
-        function positionBubble() {
-            const rect = iconEl.getBoundingClientRect();
-            // Vertically centered with the icon, placed to its left
-            bubble.style.top  = (rect.top + rect.height / 2) + 'px';
-            bubble.style.left = ''; // clear any previous left
-            bubble.style.right = (window.innerWidth - rect.left + 12) + 'px';
-        }
+        var hideTimer = null;
+        var typeTimer = null;
+        var isTalking = false;
 
         function showMsg(msg, fromClick) {
             if (isTalking && !fromClick) return;
@@ -605,24 +592,18 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(hideTimer);
             clearInterval(typeTimer);
             isTalking = true;
-
-            // Position before showing so it appears in the right spot
-            positionBubble();
-
-            // Use spread to properly handle emoji (multi-byte chars)
-            const chars = [...msg];
             textEl.textContent = '';
-            bubble.classList.add('show');
+            bubble.className = 'speech-bubble show';
 
-            let i = 0;
-            typeTimer = setInterval(() => {
-                if (i < chars.length) {
-                    textEl.textContent += chars[i++];
+            var i = 0;
+            typeTimer = setInterval(function () {
+                if (i < msg.length) {
+                    textEl.textContent += msg.charAt(i);
+                    i++;
                 } else {
                     clearInterval(typeTimer);
-                    // Keep message visible for 6 seconds after typing finishes
-                    hideTimer = setTimeout(() => {
-                        bubble.classList.remove('show');
+                    hideTimer = setTimeout(function () {
+                        bubble.className = 'speech-bubble';
                         isTalking = false;
                     }, 6000);
                 }
@@ -634,28 +615,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function scheduleRandom() {
-            // Appear every 12–22 seconds
-            const delay = Math.random() * 10000 + 12000;
-            setTimeout(() => {
+            var delay = Math.random() * 10000 + 12000;
+            setTimeout(function () {
                 showMsg(randomMsg(), false);
                 scheduleRandom();
             }, delay);
         }
 
-        // On page load — welcome message after 2.5s
-        setTimeout(() => {
-            showMsg('¡Bienvenido al Monitor! 🎮', false);
+        setTimeout(function () {
+            showMsg('Bienvenido al Monitor!', false);
             scheduleRandom();
         }, 2500);
 
-        // On click — always interrupts with new message
         iconEl.style.cursor = 'pointer';
-        iconEl.addEventListener('click', () => showMsg(randomMsg(), true));
-
-        // Reposition if window is resized
-        window.addEventListener('resize', () => {
-            if (bubble.classList.contains('show')) positionBubble();
+        iconEl.addEventListener('click', function () {
+            showMsg(randomMsg(), true);
         });
     });
 })();
+
 
