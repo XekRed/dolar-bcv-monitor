@@ -555,3 +555,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ============================================================
+//  SPEECH BUBBLE — runs independently of the main app logic
+// ============================================================
+(function initSpeechBubble() {
+    const MESSAGES = [
+        '¡Hola! 👋',
+        'Tip: revisa el historial 📈',
+        'Dólar hoy... 👀',
+        '¡Hecho con ❤️ por XekRed!',
+        'Actualizo cada 5 minutos ⏱️',
+        '¿El dólar subió? 🤔',
+        'GD > todo lo demás 🌟',
+        'Datos del BCV oficial ✅',
+        '¡Convierte monedas abajo! 🔄',
+        'Crash... o sigue? 📉📈',
+    ];
+
+    function ready(fn) {
+        if (document.readyState !== 'loading') fn();
+        else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(function () {
+        const bubble = document.getElementById('speechBubble');
+        const textEl  = document.getElementById('speechText');
+        const wrapper = document.getElementById('cubeIcon');
+
+        if (!bubble || !textEl) {
+            console.warn('[Bubble] Elements not found:', { bubble, textEl });
+            return;
+        }
+
+        let hideTimer = null;
+        let typeTimer = null;
+
+        function showMsg(msg) {
+            // Cancel any previous timers
+            clearTimeout(hideTimer);
+            clearInterval(typeTimer);
+
+            textEl.textContent = '';
+            bubble.classList.add('show');
+
+            let i = 0;
+            typeTimer = setInterval(() => {
+                if (i < msg.length) {
+                    textEl.textContent += msg[i++];
+                } else {
+                    clearInterval(typeTimer);
+                    hideTimer = setTimeout(() => bubble.classList.remove('show'), 3500);
+                }
+            }, 45);
+        }
+
+        function randomMsg() {
+            return MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+        }
+
+        function scheduleRandom() {
+            const delay = Math.random() * 10000 + 8000;
+            setTimeout(() => { showMsg(randomMsg()); scheduleRandom(); }, delay);
+        }
+
+        // 1. On page load — after 2.5 seconds
+        setTimeout(() => { showMsg('¡Bienvenido al Monitor! 🎮'); scheduleRandom(); }, 2500);
+
+        // 2. On click
+        if (wrapper) {
+            wrapper.style.cursor = 'pointer';
+            wrapper.addEventListener('click', () => showMsg(randomMsg()));
+        }
+    });
+})();
