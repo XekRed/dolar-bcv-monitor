@@ -233,15 +233,16 @@ body {
 .calc-section { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-bottom: 14px; }
 
 .conv-row { display: flex; flex-direction: column; gap: 12px; }
-.conv-field { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-.conv-currencies { display: flex; align-items: flex-end; gap: 8px; width: 100%; }
-.conv-field label { font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; }
+.conv-field { display: flex; flex-direction: column; gap: 4px; flex: 1; align-items: center; }
+.conv-currencies { display: flex; align-items: flex-end; justify-content: center; gap: 8px; width: 100%; }
+.conv-field label { font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; text-align: center; width: 100%; }
 .conv-field input, .conv-field select {
     width: 100%; padding: 9px 10px;
     background: rgba(0,240,255,0.04); border: 1px solid var(--border);
     border-radius: var(--r-sm); color: var(--text-1);
     font-family: var(--mono); font-size: 0.82rem; outline: none; transition: all 0.2s;
     -webkit-appearance: none; appearance: none;
+    text-align: center; text-align-last: center;
 }
 .conv-field input:focus, .conv-field select:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,240,255,0.12); }
 .conv-field select {
