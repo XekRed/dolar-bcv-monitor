@@ -578,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     ready(function () {
-        const bubble = document.getElementById('speechBubble');
+        const bubble  = document.getElementById('speechBubble');
         const textEl  = document.getElementById('speechText');
         const wrapper = document.getElementById('cubeIcon');
 
@@ -587,13 +587,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        let hideTimer = null;
-        let typeTimer = null;
+        let hideTimer  = null;
+        let typeTimer  = null;
+        let isTalking  = false; // prevents click-glitch during typewriter
 
-        function showMsg(msg) {
-            // Cancel any previous timers
+        function showMsg(msg, fromClick = false) {
+            // If currently typing from random schedule, ignore click
+            // But if user explicitly clicks, interrupt and restart
+            if (isTalking && !fromClick) return;
+
             clearTimeout(hideTimer);
             clearInterval(typeTimer);
+            isTalking = true;
 
             textEl.textContent = '';
             bubble.classList.add('show');
@@ -604,7 +609,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     textEl.textContent += msg[i++];
                 } else {
                     clearInterval(typeTimer);
-                    hideTimer = setTimeout(() => bubble.classList.remove('show'), 3500);
+                    hideTimer = setTimeout(() => {
+                        bubble.classList.remove('show');
+                        isTalking = false;
+                    }, 3500);
                 }
             }, 45);
         }
@@ -614,17 +622,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function scheduleRandom() {
-            const delay = Math.random() * 10000 + 8000;
-            setTimeout(() => { showMsg(randomMsg()); scheduleRandom(); }, delay);
+            // Random delay between 25 and 50 seconds
+            const delay = Math.random() * 25000 + 25000;
+            setTimeout(() => {
+                showMsg(randomMsg());
+                scheduleRandom();
+            }, delay);
         }
 
         // 1. On page load — after 2.5 seconds
-        setTimeout(() => { showMsg('¡Bienvenido al Monitor! 🎮'); scheduleRandom(); }, 2500);
+        setTimeout(() => {
+            showMsg('¡Bienvenido al Monitor! 🎮');
+            scheduleRandom();
+        }, 2500);
 
-        // 2. On click
+        // 2. On click — always interrupts and shows a new message
         if (wrapper) {
             wrapper.style.cursor = 'pointer';
-            wrapper.addEventListener('click', () => showMsg(randomMsg()));
+            wrapper.addEventListener('click', () => showMsg(randomMsg(), true));
         }
     });
 })();

@@ -162,9 +162,9 @@ body {
 }
 .speech-bubble {
     position: absolute;
-    top: 50%; left: calc(100% + 14px);
+    top: 50%; right: calc(100% + 14px);
     transform: translateY(-50%) scale(0);
-    transform-origin: left center;
+    transform-origin: right center;
     background: var(--bg-elevated);
     border: 1px solid var(--cyan);
     box-shadow: 0 0 16px rgba(0,240,255,0.35), inset 0 0 8px rgba(0,240,255,0.07);
@@ -179,14 +179,14 @@ body {
     transform: translateY(-50%) scale(1);
     opacity: 1;
 }
-/* Tail pointing LEFT toward the icon */
+/* Tail pointing RIGHT toward the icon */
 .speech-bubble::before {
     content: '';
     position: absolute;
-    top: 50%; right: 100%;
+    top: 50%; left: 100%;
     transform: translateY(-50%);
     border: 7px solid transparent;
-    border-right-color: var(--cyan);
+    border-left-color: var(--cyan);
 }
 
 /* Update Status */
@@ -463,8 +463,8 @@ body {
     .glitch-text { font-size: 1.1rem; letter-spacing: 1px; }
     .subtitle { font-size: 0.5rem; letter-spacing: 3px; }
     .app-icon { width: 34px; height: 34px; }
+    .speech-bubble { display: none; }
     .logo-section { gap: 8px; }
-    .speech-bubble { display: none !important; }
 
     .cards-row { grid-template-columns: repeat(2, 1fr); }
     .cards-row .card-change { grid-column: span 2; }
