@@ -556,20 +556,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-//  SPEECH BUBBLE — runs independently of the main app logic
+//  SPEECH BUBBLE — fixed position, anchored to cube icon via JS
 // ============================================================
 (function initSpeechBubble() {
+    // Clear, sensible messages only — no garbled emoji issues
     const MESSAGES = [
         '¡Hola! 👋',
-        'Tip: revisa el historial 📈',
-        'Dólar hoy... 👀',
-        '¡Hecho con ❤️ por XekRed!',
+        '¡Hecho por XekRed! 🎮',
+        'Datos actualizados del BCV ✅',
+        '¿El dólar subió hoy? 👀',
+        '¡Revisa el historial! 📈',
         'Actualizo cada 5 minutos ⏱️',
-        '¿El dólar subió? 🤔',
-        'GD > todo lo demás 🌟',
-        'Datos del BCV oficial ✅',
-        '¡Convierte monedas abajo! 🔄',
-        'Crash... o sigue? 📉📈',
+        'GD es el mejor juego 🌟',
+        '¿Convierte monedas abajo? 🔄',
     ];
 
     function ready(fn) {
@@ -580,41 +579,54 @@ document.addEventListener('DOMContentLoaded', () => {
     ready(function () {
         const bubble  = document.getElementById('speechBubble');
         const textEl  = document.getElementById('speechText');
-        const wrapper = document.getElementById('cubeIcon');
+        const iconEl  = document.getElementById('cubeIcon');
 
-        if (!bubble || !textEl) {
-            console.warn('[Bubble] Elements not found:', { bubble, textEl });
+        if (!bubble || !textEl || !iconEl) {
+            console.warn('[Bubble] Missing elements');
             return;
         }
 
-        let hideTimer  = null;
-        let typeTimer  = null;
-        let isTalking  = false; // prevents click-glitch during typewriter
+        let hideTimer = null;
+        let typeTimer = null;
+        let isTalking = false;
 
-        function showMsg(msg, fromClick = false) {
-            // If currently typing from random schedule, ignore click
-            // But if user explicitly clicks, interrupt and restart
+        /** Position bubble to the LEFT of the icon using fixed coordinates */
+        function positionBubble() {
+            const rect = iconEl.getBoundingClientRect();
+            // Vertically centered with the icon, placed to its left
+            bubble.style.top  = (rect.top + rect.height / 2) + 'px';
+            bubble.style.left = ''; // clear any previous left
+            bubble.style.right = (window.innerWidth - rect.left + 12) + 'px';
+        }
+
+        function showMsg(msg, fromClick) {
             if (isTalking && !fromClick) return;
 
             clearTimeout(hideTimer);
             clearInterval(typeTimer);
             isTalking = true;
 
+            // Position before showing so it appears in the right spot
+            positionBubble();
+
+            // Use spread to properly handle emoji (multi-byte chars)
+            const chars = [...msg];
             textEl.textContent = '';
             bubble.classList.add('show');
 
             let i = 0;
             typeTimer = setInterval(() => {
-                if (i < msg.length) {
-                    textEl.textContent += msg[i++];
+                if (i < chars.length) {
+                    textEl.textContent += chars[i++];
                 } else {
                     clearInterval(typeTimer);
+                    // Keep message visible for 6 seconds after typing finishes
                     hideTimer = setTimeout(() => {
                         bubble.classList.remove('show');
                         isTalking = false;
-                    }, 3500);
+                    }, 6000);
                 }
-            }, 45);
+            }, 50);
         }
 
         function randomMsg() {
@@ -622,24 +634,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function scheduleRandom() {
-            // Random delay between 25 and 50 seconds
-            const delay = Math.random() * 25000 + 25000;
+            // Appear every 12–22 seconds
+            const delay = Math.random() * 10000 + 12000;
             setTimeout(() => {
-                showMsg(randomMsg());
+                showMsg(randomMsg(), false);
                 scheduleRandom();
             }, delay);
         }
 
-        // 1. On page load — after 2.5 seconds
+        // On page load — welcome message after 2.5s
         setTimeout(() => {
-            showMsg('¡Bienvenido al Monitor! 🎮');
+            showMsg('¡Bienvenido al Monitor! 🎮', false);
             scheduleRandom();
         }, 2500);
 
-        // 2. On click — always interrupts and shows a new message
-        if (wrapper) {
-            wrapper.style.cursor = 'pointer';
-            wrapper.addEventListener('click', () => showMsg(randomMsg(), true));
-        }
+        // On click — always interrupts with new message
+        iconEl.style.cursor = 'pointer';
+        iconEl.addEventListener('click', () => showMsg(randomMsg(), true));
+
+        // Reposition if window is resized
+        window.addEventListener('resize', () => {
+            if (bubble.classList.contains('show')) positionBubble();
+        });
     });
 })();
+
